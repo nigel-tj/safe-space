@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">GBV</string>
+    <string name="title_activity_main">GBV</string>
+    <string name="package_name">zw.co.nseye.gbv</string>
+    <string name="custom_url_scheme">zw.co.nseye.gbv</string>
+</resources>
