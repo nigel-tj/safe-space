@@ -23,7 +23,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'speakers',
+        path: 'social-workers',
         children: [
           {
             path: '',
@@ -34,17 +34,17 @@ const routes: Routes = [
             loadChildren: () => import('../session-detail/session-detail.module').then(m => m.SessionDetailModule)
           },
           {
-            path: 'speaker-details/:speakerId',
-            loadChildren: () => import('../speaker-detail/speaker-detail.module').then(m => m.SpeakerDetailModule)
+            path: 'social-workers/:social-worker-id',
+            loadChildren: () => import('../social-worker-detail/social-worker-detail.module').then(m => m.SocialWorkerDetailPageModule)
           }
         ]
       },
       {
-        path: 'map',
+        path: 'help-centers',
         children: [
           {
             path: '',
-            loadChildren: () => import('../map/map.module').then(m => m.MapModule)
+            loadChildren: () => import('../help-centers/help-centers.module').then(m => m.HelpCentersPageModule)
           }
         ]
       },
@@ -54,6 +54,23 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () => import('../about/about.module').then(m => m.AboutModule)
+          }
+        ]
+      },
+      {
+        path: 'news-feed',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../news-feed/news-feed.module').then(m => m.NewsFeedPageModule)
+          },
+          {
+            path: 'session/:sessionId',
+            loadChildren: () => import('../session-detail/session-detail.module').then(m => m.SessionDetailModule)
+          },
+          {
+            path: 'social-workers/:social-worker-id',
+            loadChildren: () => import('../social-worker-detail/social-worker-detail.module').then(m => m.SocialWorkerDetailPageModule)
           }
         ]
       },

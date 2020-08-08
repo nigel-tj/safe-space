@@ -5,11 +5,11 @@
       <ion-content>
         <ion-list lines="none">
           <ion-list-header>
-            NEeye-Corp GBV Platform
+            <p class="ion-text-center"><ion-text class="ion-text-center" color="black">Safe</ion-text> <ion-text class="ion-text-center" color="primary">Space</ion-text></p>
           </ion-list-header>
           <ion-menu-toggle autoHide="false" *ngFor="let p of appPages; let i = index">
             <ion-item [routerLink]="p.url" routerLinkActive="selected" routerDirection="root" detail="false">
-              <ion-icon slot="start" [name]="p.icon + '-outline'"></ion-icon>
+              <ion-icon color="primary"  slot="start" [name]="p.icon + '-outline'"></ion-icon>
               <ion-label>
                 {{p.title}}
               </ion-label>
@@ -25,7 +25,7 @@
 
           <ion-menu-toggle autoHide="false">
             <ion-item routerLink="/account" routerLinkActive="active" routerDirection="root" detail="false">
-              <ion-icon slot="start" name="person"></ion-icon>
+              <ion-icon color="primary" slot="start" name="person"></ion-icon>
               <ion-label>
                 Account
               </ion-label>
@@ -34,7 +34,7 @@
 
           <ion-menu-toggle autoHide="false">
             <ion-item routerLink="/support" routerLinkActive="active" routerDirection="root" detail="false">
-              <ion-icon slot="start" name="help"></ion-icon>
+              <ion-icon color="primary" slot="start" name="help"></ion-icon>
               <ion-label>
                 Support
               </ion-label>
@@ -43,7 +43,7 @@
 
           <ion-menu-toggle autoHide="false">
             <ion-item button (click)="logout()" detail="false">
-              <ion-icon slot="start" name="log-out"></ion-icon>
+              <ion-icon color="primary" slot="start" name="log-out"></ion-icon>
               <ion-label>
                 Logout
               </ion-label>
@@ -95,12 +95,12 @@
 
         <ion-list lines="none">
           <ion-list-header>
-            Tutorial
+            <ion-text color="primary">Welcome</ion-text>
           </ion-list-header>
           <ion-menu-toggle autoHide="false">
             <ion-item button (click)="openTutorial()" detail="false">
-              <ion-icon slot="start" name="hammer"></ion-icon>
-              <ion-label>Show Tutorial</ion-label>
+              <ion-icon color="primary" slot="start" name="home"></ion-icon>
+              <ion-label>Welcome Slides</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

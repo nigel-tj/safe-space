@@ -7,16 +7,15 @@
 </ion-header>
 
 <ion-content fullscreen="true">
-  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager="false">
+  <ion-slides #slides (ionSlideWillChange)="onSlideChangeStart($event)" pager="true">
     <ion-slide>
       <img src="assets/img/black-beauty.png" class="slide-image" />
       <h2 class="slide-title">
-        <b>NSeye <ion-text color="primary">GBV</ion-text> Platform</b>
+        <b><ion-text>SAFE</ion-text> <ion-text color="primary">SPACE</ion-text></b>
       </h2>
       <p>
         NSeye-Corp &reg; in colaboration with our very talented Designers and Developers has built a 
-        <ion-text color="primary"><b> Gender-based violence (GBV)</b></ion-text> platform for women 
-        to raise awareness on GBV and call-out abusers.
+        <ion-text color="primary"><b> Gender-based violence (GBV)</b></ion-text> platform "SAFE SPACE" for victims to raise awareness on GBV and call-out abusers.
       </p>
     </ion-slide>
 
@@ -38,9 +37,9 @@
 
     <ion-slide>
       <img src="assets/img/women.png" class="slide-image" />
-      <h2 class="slide-title"><ion-icon name="home"></ion-icon>Home</h2>
+      <h2 class="slide-title">SAFE <ion-icon color="primary" name="home"></ion-icon> SPACE</h2>
       <ion-button fill="clear" (click)="startApp()">
-        Continue
+        Welcome
         <ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-button>
     </ion-slide>

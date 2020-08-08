@@ -2,15 +2,7 @@
   <ion-toolbar>
     <ion-buttons *ngIf="!showSearchbar" slot="start">
       <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-segment *ngIf="ios" [(ngModel)]="segment" (ionChange)="updateSchedule()">
-      <ion-segment-button value="all">
-        Home
-      </ion-segment-button>
-      <ion-segment-button value="favorites">
-        Emergency 
-      </ion-segment-button>
-    </ion-segment>
+    </ion-buttons>    
     <ion-title *ngIf="!ios && !showSearchbar"><ion-icon name="home"></ion-icon></ion-title>
     <ion-searchbar *ngIf="showSearchbar" showCancelButton="always" [(ngModel)]="queryText" (ionChange)="updateSchedule()" (ionCancel)="showSearchbar = false" placeholder="Search"></ion-searchbar>
     <ion-buttons slot="end">
@@ -26,14 +18,6 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar *ngIf="!ios">
-    <ion-segment [(ngModel)]="segmentModel" (ionChange)="updateSchedule()">
-      <ion-segment-button value="all">
-        Home
-      </ion-segment-button>
-      <ion-segment-button value="emergency">
-        Emergency
-      </ion-segment-button>
-    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
@@ -46,7 +30,7 @@
       <ion-searchbar [(ngModel)]="queryText" (ionChange)="updateSchedule()" placeholder="Search"></ion-searchbar>
     </ion-toolbar>
   </ion-header>
-  
+
   <ion-grid>
     <ion-row>
       <ion-col>
@@ -57,7 +41,7 @@
 	  <ion-card-content>
 	    <img src="/assets/img/community.jpg" alt="ion">
 	    <p><ion-label color="primary">Start making new friends in your safe space</ion-label></p>
-	    <ion-button expand="block">Start Socialising</ion-button>
+	    <ion-button expand="block" href="../chatrooms/">Start Socialising</ion-button>
 	  </ion-card-content>
 	</ion-card>
       </ion-col>
@@ -67,9 +51,9 @@
 	    Safe Space News
 	  </ion-card-header>
 	  <ion-card-content>
-	    <img src="/assets/img/news.png" alt="ion">
-	    <p><ion-label color="primary">Stay informed & woke</ion-label></p>
-	    <ion-button expand="block">Start Browsing</ion-button>
+	    <img src="/assets/img/news.svg" alt="ion">
+	    <p><ion-label color="primary">Stay informed & Stay woke</ion-label></p>
+	    <ion-button expand="block" href="../feed/">Start Reading</ion-button>
 	  </ion-card-content>
 	</ion-card>
       </ion-col>
@@ -79,9 +63,9 @@
 	    Social Workers
 	  </ion-card-header>
 	  <ion-card-content>
-	    <img src="/assets/img/community.jpg" alt="ion">
+	    <img src="/assets/img/social-workers.svg" alt="ion">
 	    <p><ion-label color="primary">Be the change you wish to see in the world.</ion-label></p>
-	    <ion-button expand="block">Start Chatting</ion-button>
+	    <ion-button expand="block" href="../social-workers/">Start Chatting</ion-button>
 	  </ion-card-content>
 	</ion-card>
       </ion-col>
@@ -91,9 +75,9 @@
 	    SOS
 	  </ion-card-header>
 	  <ion-card-content>
-	    <img src="/assets/img/community.jpg" alt="ion">
+	    <img src="/assets/img/social-worker2.svg" alt="ion">
 	    <p><ion-label color="primary"></ion-label></p>
-	    <ion-button expand="block">Get Help!</ion-button>
+	    <ion-button expand="block" href="../sos/">Get Help Now!</ion-button>
 	  </ion-card-content>
 	</ion-card>
       </ion-col>
@@ -103,9 +87,9 @@
 	    Help Centers
 	  </ion-card-header>
 	  <ion-card-content>
-	    <img src="/assets/img/community.jpg" alt="ion">
+	    <img src="/assets/img/help-locations.svg" alt="ion">
 	    <p><ion-label color="primary"></ion-label></p>
-	    <ion-button expand="block">Open Map</ion-button>
+	    <ion-button expand="block" href="../help-locations/">Open Map</ion-button>
 	  </ion-card-content>
 	</ion-card>
       </ion-col>
@@ -115,7 +99,7 @@
 	    Report GBV Case
 	  </ion-card-header>
 	  <ion-card-content>
-	    <img src="/assets/img/community.jpg" alt="ion">
+	    <img src="/assets/img/social-workers.svg" alt="ion">
 	    <p><ion-label color="primary"></ion-label></p>
 	    <ion-button expand="block">File Report</ion-button>
 	  </ion-card-content>

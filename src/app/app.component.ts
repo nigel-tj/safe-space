@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
-
 import { MenuController, Platform, ToastController } from '@ionic/angular';
 
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -20,17 +19,23 @@ import { UserData } from './providers/user-data';
 export class AppComponent implements OnInit {
   appPages = [
     {
-      title: 'Schedule',
-      url: '/app/tabs/schedule',
-      icon: 'calendar'
+      title: 'News Feed',
+      url: '/app/tabs/news-feed',
+      icon: 'list'
     },
     {
-      title: 'Speakers',
-      url: '/app/tabs/speakers',
+      title: 'Social Workers',
+      url: '/app/tabs/social-workers',
       icon: 'people'
     },
     {
-      title: 'Map',
+      title: 'Chat Rooms',
+      url: '/app/tabs/chatrooms',
+      icon: 'chatbubbles'
+    },
+
+    {
+      title: 'Help Centers',
       url: '/app/tabs/map',
       icon: 'map'
     },
