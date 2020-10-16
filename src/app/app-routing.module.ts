@@ -56,6 +56,10 @@ const routes: Routes = [
   {
     path: 'social-worker-detail',
     loadChildren: () => import('./pages/social-worker-detail/social-worker-detail.module').then( m => m.SocialWorkerDetailPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   }
 ];
 

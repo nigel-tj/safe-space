@@ -4,7 +4,8 @@ import { NavController } from '@ionic/angular';
 import * as firebase from 'firebase/app';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabase, AngularFireList } from "angularfire2/database"; 
+import { AngularFireDatabase, AngularFireList, AngularFireObject } from "angularfire2/database"; 
+import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument } from "angularfire2/firestore";
 
 
 @Component({
@@ -21,8 +22,12 @@ export class UserReportsPage implements OnInit {
   successMessage: string = '';
   reports = [];
 
+  
+
   constructor(private navCtrl: NavController,
-  private formBuilder: FormBuilder) { }
+  private formBuilder: FormBuilder, private db: AngularFireDatabase) { 
+
+  }
 
   ngOnInit() {
     this.validations_form = this.formBuilder.group({
@@ -44,12 +49,14 @@ export class UserReportsPage implements OnInit {
 
   // Get single object
   getReport(id: string) {
+    let user = firebase.auth().currentUser;
     this.userReportRef = this.db.object('/reports/'+user.uid+'/'+ id);
-    return this.reportRef;
+    return this.userReportRef;
   }
 
   // Get List
   getUserReports() {
+    let user = firebase.auth().currentUser;
     this.userReportList = this.db.list('/reports/'+user.uid);
     return this.userReportList;
   }

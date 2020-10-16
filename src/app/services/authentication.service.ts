@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
 
 
 @Injectable({
@@ -8,7 +10,12 @@ import * as firebase from 'firebase/app';
 
 export class AuthenticationService {
 
-  constructor() { }
+  constructor($scope: any) { 
+    var user = firebase.auth().currentUser;
+    if(user != null){
+      
+    }
+  }
   
   registerUser(value){
    return new Promise<any>((resolve, reject) => {
@@ -43,6 +50,16 @@ export class AuthenticationService {
   }
  
   userDetails(){
-    return firebase.auth().currentUser;
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log(user)
+    })
+    // firebase.auth().currentUser;
+  }
+  currentUserWithScope(){
+    var user = firebase.auth().currentUser;
+    if(user != null){
+      
+    }
+    return user;
   }
 }
