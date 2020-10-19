@@ -28,7 +28,7 @@ export class HelpCentersPage implements OnInit {
     fetch('./assets/data/data.json')
       .then(res => res.json())
       .then(data => {
-        this.propertyList = data.properties;
+        this.propertyList = data.map;
         this.leafletMap();
       })
       .catch(err => console.error(err));
@@ -36,7 +36,7 @@ export class HelpCentersPage implements OnInit {
 
   leafletMap() {
     for (const property of this.propertyList) {
-      Leaflet.marker([property.lat, property.long]).addTo(this.map)
+      Leaflet.marker([property.lat, property.lng]).addTo(this.map)
         .bindPopup(property.city)
         .openPopup();
     }
