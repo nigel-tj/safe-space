@@ -19,7 +19,7 @@ export class HelpCentersPage implements OnInit {
   }
 
   ionViewDidEnter() {
-    this.map = new Leaflet.Map('mapId').setView([42.35663, -71.1109], 16);
+    this.map = new Leaflet.Map('mapId').setView([-34.008045, 18.4669712], 12);
 
     Leaflet.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       attribution: 'nseye.co.zw'
@@ -35,7 +35,7 @@ export class HelpCentersPage implements OnInit {
   }
 
   leafletMap() {
-    var greenIcon = L.icon({
+    var greenIcon = Leaflet.icon({
       iconUrl: './assets/icons/leaf-green.png',
       shadowUrl: './assets/icons/leaf-shadow.png',
   

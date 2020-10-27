@@ -405,20 +405,20 @@
 
   "map": [
     {
-      "name": "Monona Terrace Convention Center",
-      "lat": 43.071584,
-      "lng": -89.38012,
+      "name": "Milestnoe Building",
+      "lat": -34.008045,
+      "lng": 18.4669712,
       "center": true
     },
     {
-      "name": "Ionic HQ",
-      "lat": 43.074395,
-      "lng": -89.381056
+      "name": "Claremont Center",
+      "lat": -33.9839471,
+      "lng": 18.4626273
     },
     {
       "name": "Afterparty - Brocach Irish Pub",
-      "lat": 43.07336,
-      "lng": -89.38335
+      "lat": -33.9264666,
+      "lng": 18.412801
     }
   ],
 
