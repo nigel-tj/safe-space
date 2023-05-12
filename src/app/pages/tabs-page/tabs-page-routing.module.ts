@@ -67,6 +67,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'reports',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../reports/reports.module').then(m => m.ReportsPageModule)
+          }
+        ]
+      },
+      {
         path: 'about',
         children: [
           {

@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { SwUpdate } from '@angular/service-worker';
 import { MenuController, Platform, ToastController } from '@ionic/angular';
 
+import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
 import { Storage } from '@ionic/storage';
-
+import { SwUpdate } from '@angular/service-worker';
 import { UserData } from './providers/user-data';
 
 @Component({
@@ -33,7 +31,11 @@ export class AppComponent implements OnInit {
       url: '/app/tabs/chatrooms',
       icon: 'chatbubbles'
     },
-
+    {
+      title: 'Report',
+      url: '/app/tabs/reports',
+      icon: 'megaphone'
+    },
     {
       title: 'Help Centers',
       url: '/app/tabs/map',
