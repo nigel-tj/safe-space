@@ -1,8 +1,9 @@
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+
 import { AuthenticationService } from '../../services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,14 @@ export class LoginPage implements OnInit {
   private authService = inject(AuthenticationService);
 
   credentials: FormGroup;
+
+  get email() {
+    return this.credentials.get('email');
+  }
+
+  get password() {
+    return this.credentials.get('password');
+  }
 
   constructor() {
     this.credentials = this.formBuilder.group({

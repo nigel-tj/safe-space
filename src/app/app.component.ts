@@ -149,8 +149,7 @@ export class AppComponent implements OnInit {
   }
 
   async openTutorial() {
-    this.menu.enable(false);
     await this.storage.set('ion_did_tutorial', false);
-    await this.router.navigateByUrl('/tutorial');
+    await this.router.navigateByUrl('/welcome');
   }
 }
