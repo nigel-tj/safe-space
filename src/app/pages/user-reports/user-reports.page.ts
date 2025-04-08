@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { NavController } from '@ionic/angular';
-import * as firebase from 'firebase/app';
+import { NavController, ModalController } from '@ionic/angular';
 import { AuthenticationService } from '../../services/authentication.service';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireDatabase, AngularFireList, AngularFireObject } from "angularfire2/database"; 
-import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument } from "angularfire2/firestore";
-
+import { Database, get, getDatabase, onValue, push, ref, set } from '@angular/fire/database';
+import { Auth, authState, user } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-user-reports',
@@ -15,51 +12,64 @@ import { AngularFirestoreCollection, AngularFirestore, AngularFirestoreDocument 
 })
 
 export class UserReportsPage implements OnInit {
-  userReportList: AngularFireList<any>;
-  userReportRef: AngularFireObject<any>;
   validations_form: FormGroup;
   errorMessage: string = '';
   successMessage: string = '';
   reports = [];
+  showForm = false;
 
-  
-
-  constructor(private navCtrl: NavController,
-  private formBuilder: FormBuilder, private db: AngularFireDatabase) { 
-
-  }
+  constructor(
+    private navCtrl: NavController,
+    private formBuilder: FormBuilder,
+    private database: Database,
+    private auth: Auth,
+    private modalController: ModalController
+  ) {}
 
   ngOnInit() {
     this.validations_form = this.formBuilder.group({
-      name: new FormControl(''),
-      number: new FormControl(''),
-      message: new FormControl('')
+      name: new FormControl('', Validators.required),
+      number: new FormControl('', Validators.required),
+      message: new FormControl('', Validators.required)
     });
-    //this.reports = getUserReports();
+    this.loadReports();
   }
 
-  sendReport(value){
-    let user = firebase.auth().currentUser;
-    let newInfo = firebase.database().ref('reports/'+user.uid).push();
-    console.log("TTTTTTTTT"+user.uid);
-    newInfo.set(value);
-    this.navCtrl.navigateForward('/home/user-reports');
-
+  openReportForm() {
+    this.showForm = true;
   }
 
-  // Get single object
-  getReport(id: string) {
-    let user = firebase.auth().currentUser;
-    this.userReportRef = this.db.object('/reports/'+user.uid+'/'+ id);
-    return this.userReportRef;
+  async loadReports() {
+    if (this.auth.currentUser) {
+      const userReportsRef = ref(this.database, `reports/${this.auth.currentUser.uid}`);
+      onValue(userReportsRef, (snapshot) => {
+        this.reports = [];
+        snapshot.forEach((childSnapshot) => {
+          const report = childSnapshot.val();
+          report.id = childSnapshot.key;
+          this.reports.push(report);
+        });
+      });
+    }
   }
 
-  // Get List
-  getUserReports() {
-    let user = firebase.auth().currentUser;
-    this.userReportList = this.db.list('/reports/'+user.uid);
-    return this.userReportList;
+  async sendReport(value) {
+    if (this.auth.currentUser) {
+      const userReportsRef = ref(this.database, `reports/${this.auth.currentUser.uid}`);
+      const newReportRef = push(userReportsRef);
+      await set(newReportRef, value);
+      this.validations_form.reset();
+      this.showForm = false;
+      this.navCtrl.navigateForward('/home/user-reports');
+    }
   }
-	      
 
+  async getReport(id: string) {
+    if (this.auth.currentUser) {
+      const reportRef = ref(this.database, `reports/${this.auth.currentUser.uid}/${id}`);
+      const snapshot = await get(reportRef);
+      return snapshot.val();
+    }
+    return null;
+  }
 }

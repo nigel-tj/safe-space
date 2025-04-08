@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActionSheetController, IonicModule } from '@ionic/angular';
+import { Browser } from '@capacitor/browser';
 import { ConferenceData } from '../../providers/conference-data';
-import { ActionSheetController } from '@ionic/angular';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'page-speaker-detail',
   templateUrl: 'speaker-detail.html',
   styleUrls: ['./speaker-detail.scss'],
+  standalone: true,
+  imports: [CommonModule, IonicModule]
 })
 export class SpeakerDetailPage {
   speaker: any;
@@ -15,9 +18,7 @@ export class SpeakerDetailPage {
   constructor(
     private dataProvider: ConferenceData,
     private route: ActivatedRoute,
-    public actionSheetCtrl: ActionSheetController,
-    public confData: ConferenceData,
-    public inAppBrowser: InAppBrowser,
+    public actionSheetCtrl: ActionSheetController
   ) {}
 
   ionViewWillEnter() {
@@ -34,11 +35,8 @@ export class SpeakerDetailPage {
     });
   }
 
-  openExternalUrl(url: string) {
-    this.inAppBrowser.create(
-      url,
-      '_blank'
-    );
+  async openExternalUrl(url: string) {
+    await Browser.open({ url });
   }
 
   async openSpeakerShare(speaker: any) {
@@ -48,21 +46,17 @@ export class SpeakerDetailPage {
         {
           text: 'Copy Link',
           handler: () => {
-            console.log(
-              'Copy link clicked on https://twitter.com/' + speaker.twitter
-            );
-            if (
-              (window as any).cordova &&
-              (window as any).cordova.plugins.clipboard
-            ) {
-              (window as any).cordova.plugins.clipboard.copy(
-                'https://twitter.com/' + speaker.twitter
-              );
+            console.log('Copy link clicked on https://twitter.com/' + speaker.twitter);
+            if (window.navigator.clipboard) {
+              window.navigator.clipboard.writeText('https://twitter.com/' + speaker.twitter);
             }
           }
         },
         {
-          text: 'Share via ...'
+          text: 'Share via ...',
+          handler: () => {
+            console.log('Share via clicked');
+          }
         },
         {
           text: 'Cancel',
@@ -70,37 +64,25 @@ export class SpeakerDetailPage {
         }
       ]
     });
-
     await actionSheet.present();
   }
 
   async openContact(speaker: any) {
-    const mode = 'ios'; // this.config.get('mode');
-
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Contact ' + speaker.name,
       buttons: [
         {
-          text: `Email ( ${speaker.email} )`,
-          icon: mode !== 'ios' ? 'mail' : null,
+          text: 'Email (' + speaker.email + ')',
           handler: () => {
             window.open('mailto:' + speaker.email);
           }
         },
         {
-          text: `Call ( ${speaker.phone} )`,
-          icon: mode !== 'ios' ? 'call' : null,
-          handler: () => {
-            window.open('tel:' + speaker.phone);
-          }
-        },
-        {
           text: 'Cancel',
           role: 'cancel'
         }
       ]
     });
-
     await actionSheet.present();
   }
 }

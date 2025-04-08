@@ -14,39 +14,65 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-grid fixed>
+  <ion-grid fixed *ngIf="!showForm">
+    <ion-row *ngIf="reports.length === 0">
+      <ion-col size="12" class="ion-text-center">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>No Reports Yet</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>You haven't submitted any reports yet.</p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
     <ion-row>
       <ion-col size="12" size-md="6" *ngFor="let report of reports">
-        <ion-card class="speaker-card">
+        <ion-card>
           <ion-card-header>
-            <ion-item detail="false" lines="none" class="speaker-item" routerLink="/app/tabs/speakers/user-reports/{{report.id}}">
-              <ion-avatar slot="start">
-                <img [src]="speaker.profilePic" [alt]="report.name + ' profile picture'">
-              </ion-avatar>
-              <ion-label>
-                <h2>{{report.name}}</h2>
-                <p>{{report.title}}</p>
-              </ion-label>
-            </ion-item>
+            <ion-card-title>{{report.name}}</ion-card-title>
+            <ion-card-subtitle>{{report.number}}</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-list lines="none">
-              <ion-item *ngFor="let session of report.sessions" detail="false" routerLink="/app/tabs/user-report/session/{{session.id}}">
-                <ion-label>
-                  <h3>{{session.name}}</h3>
-                </ion-label>
-              </ion-item>
-
-              <ion-item detail="false" routerLink="/app/tabs/speakers/speaker-details/{{speaker.id}}">
-                <ion-label>
-                  <h3>About {{report.name}}</h3>
-                </ion-label>
-              </ion-item>
-            </ion-list>
+            <p>{{report.message}}</p>
           </ion-card-content>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!showForm">
+    <ion-fab-button (click)="openReportForm()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Report Form -->
+  <div *ngIf="showForm" class="ion-padding">
+    <h2>Submit New Report</h2>
+    <form [formGroup]="validations_form" (ngSubmit)="sendReport(validations_form.value)">
+      <ion-item>
+        <ion-label position="floating">Name</ion-label>
+        <ion-input formControlName="name" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Phone Number</ion-label>
+        <ion-input formControlName="number" type="tel"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Message</ion-label>
+        <ion-textarea formControlName="message" rows="6"></ion-textarea>
+      </ion-item>
+
+      <div class="ion-padding">
+        <ion-button expand="block" type="submit" [disabled]="!validations_form.valid">Submit Report</ion-button>
+        <ion-button expand="block" fill="outline" (click)="showForm = false">Cancel</ion-button>
+      </div>
+    </form>
+  </div>
 </ion-content>

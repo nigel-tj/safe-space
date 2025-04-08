@@ -1,20 +1,40 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { MenuController, Platform, ToastController } from '@ionic/angular';
+import { Router, RouterModule } from '@angular/router';
 
-import { Router } from '@angular/router';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Storage } from '@ionic/storage';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 import { SwUpdate } from '@angular/service-worker';
 import { UserData } from './providers/user-data';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [
+    IonicModule,
+    RouterModule,
+    FormsModule,
+    CommonModule
+  ],
+  providers: [
+    UserData
+  ]
 })
 export class AppComponent implements OnInit {
+  private menu = inject(MenuController);
+  private platform = inject(Platform);
+  private router = inject(Router);
+  private storage = inject(Storage);
+  private userData = inject(UserData);
+  private swUpdate = inject(SwUpdate);
+  private toastCtrl = inject(ToastController);
+
   appPages = [
     {
       title: 'News Feed',
@@ -47,90 +67,90 @@ export class AppComponent implements OnInit {
       icon: 'information-circle'
     }
   ];
+
   loggedIn = false;
   dark = false;
+  appName = environment.appName;
+  version = environment.version;
 
-  constructor(
-    private menu: MenuController,
-    private platform: Platform,
-    private router: Router,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private storage: Storage,
-    private userData: UserData,
-    private swUpdate: SwUpdate,
-    private toastCtrl: ToastController,
-  ) {
+  constructor() {
     this.initializeApp();
   }
 
   async ngOnInit() {
+    await this.storage.create();
     this.checkLoginStatus();
     this.listenForLoginEvents();
+    this.setupServiceWorker();
+  }
 
-    this.swUpdate.available.subscribe(async res => {
-      const toast = await this.toastCtrl.create({
-        message: 'Update available!',
-        position: 'bottom',
-        buttons: [
-          {
-            role: 'cancel',
-            text: 'Reload'
-          }
-        ]
+  private async setupServiceWorker() {
+    if (this.swUpdate.isEnabled) {
+      this.swUpdate.versionUpdates.subscribe(event => {
+        if (event.type === 'VERSION_READY') {
+          this.promptUserUpdate();
+        }
       });
-
-      await toast.present();
-
-      toast
-        .onDidDismiss()
-        .then(() => this.swUpdate.activateUpdate())
-        .then(() => window.location.reload());
-    });
+    }
   }
 
-  initializeApp() {
+  private async promptUserUpdate() {
+    const toast = await this.toastCtrl.create({
+      message: 'Update available!',
+      position: 'bottom',
+      buttons: [
+        {
+          role: 'cancel',
+          text: 'Reload'
+        }
+      ]
+    });
+
+    await toast.present();
+
+    toast.onDidDismiss()
+      .then(() => this.swUpdate.activateUpdate())
+      .then(() => window.location.reload());
+  }
+
+  private initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      if (this.platform.is('hybrid')) {
+        this.setupStatusBar();
+      }
     });
   }
 
-  checkLoginStatus() {
-    return this.userData.isLoggedIn().then(loggedIn => {
-      return this.updateLoggedInStatus(loggedIn);
-    });
+  private setupStatusBar() {
+    const statusBar = document.querySelector('ion-status-bar') as HTMLElement;
+    if (statusBar) {
+      statusBar.style.backgroundColor = this.dark ? '#000000' : '#ffffff';
+    }
   }
 
-  updateLoggedInStatus(loggedIn: boolean) {
-    setTimeout(() => {
-      this.loggedIn = loggedIn;
-    }, 300);
+  async checkLoginStatus() {
+    const loggedIn = await this.userData.isLoggedIn();
+    this.updateLoggedInStatus(loggedIn);
   }
 
-  listenForLoginEvents() {
-    window.addEventListener('user:login', () => {
-      this.updateLoggedInStatus(true);
-    });
-
-    window.addEventListener('user:signup', () => {
-      this.updateLoggedInStatus(true);
-    });
-
-    window.addEventListener('user:logout', () => {
-      this.updateLoggedInStatus(false);
-    });
+  private updateLoggedInStatus(loggedIn: boolean) {
+    this.loggedIn = loggedIn;
   }
 
-  logout() {
-    this.userData.logout().then(() => {
-      return this.router.navigateByUrl('/app/tabs/schedule');
-    });
+  private listenForLoginEvents() {
+    window.addEventListener('user:login', () => this.updateLoggedInStatus(true));
+    window.addEventListener('user:signup', () => this.updateLoggedInStatus(true));
+    window.addEventListener('user:logout', () => this.updateLoggedInStatus(false));
   }
 
-  openTutorial() {
+  async logout() {
+    await this.userData.logout();
+    await this.router.navigateByUrl('/app/tabs/schedule');
+  }
+
+  async openTutorial() {
     this.menu.enable(false);
-    this.storage.set('ion_did_tutorial', false);
-    this.router.navigateByUrl('/tutorial');
+    await this.storage.set('ion_did_tutorial', false);
+    await this.router.navigateByUrl('/tutorial');
   }
 }

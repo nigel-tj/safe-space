@@ -1,9 +1,9 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController, IonList, IonRouterOutlet, LoadingController, ModalController, ToastController, Config } from '@ionic/angular';
+import { AlertController, Config, IonList, IonRouterOutlet, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
 import { ConferenceData } from '../../providers/conference-data';
+import { Router } from '@angular/router';
+import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
 import { UserData } from '../../providers/user-data';
 
 @Component({
@@ -24,6 +24,7 @@ export class SchedulePage implements OnInit {
   groups: any = [];
   confDate: string;
   showSearchbar: boolean;
+  segmentModel = 'all';
 
   constructor(
     public alertCtrl: AlertController,
@@ -58,7 +59,7 @@ export class SchedulePage implements OnInit {
   async presentFilter() {
     const modal = await this.modalCtrl.create({
       component: ScheduleFilterPage,
-      swipeToClose: true,
+      canDismiss: true,
       presentingElement: this.routerOutlet.nativeEl,
       componentProps: { excludedTracks: this.excludeTracks }
     });
