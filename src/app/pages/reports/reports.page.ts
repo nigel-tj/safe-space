@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 
-import { Auth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Report } from '../../models/report';
 import { ReportService } from '../../services/report.service';
 import { Router } from '@angular/router';
@@ -17,6 +17,7 @@ export class ReportsPage implements OnInit, OnDestroy {
   reports$: Observable<Report[]>;
   searchTerm: string = '';
   selectedFilter: string = 'all';
+  currentUserId: string = '';
 
   private searchSubject = new Subject<string>();
   private filterSubject = new Subject<string>();
@@ -28,9 +29,15 @@ export class ReportsPage implements OnInit, OnDestroy {
     private router: Router,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private auth: Auth
+    private auth: AngularFireAuth
   ) {
     this.initializeObservables();
+    this.initializeAuth();
+  }
+
+  private async initializeAuth() {
+    const user = await this.auth.currentUser;
+    this.currentUserId = user?.uid || '';
   }
 
   ngOnInit() {
@@ -134,8 +141,6 @@ export class ReportsPage implements OnInit, OnDestroy {
           handler: async (data) => {
             if (data.title && data.description && data.priority) {
               const now = new Date();
-              const userId = this.auth.currentUser?.uid || '';
-
               const newReport: Report = {
                 title: data.title,
                 description: data.description,
@@ -143,8 +148,8 @@ export class ReportsPage implements OnInit, OnDestroy {
                 date: now,
                 status: 'pending',
                 priority: data.priority,
-                reporterId: userId,
-                userId: userId,
+                reporterId: this.currentUserId,
+                userId: this.currentUserId,
                 location: ''
               };
 

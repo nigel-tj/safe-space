@@ -1,7 +1,7 @@
-import { Database, child, get, push, ref, set } from '@angular/fire/database';
 import { Observable, from } from 'rxjs';
 
-import { Auth } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Report } from '../models/report';
@@ -13,19 +13,19 @@ export class ReportService {
   private apiUrl = 'http://localhost:3000/api/reports';
 
   constructor(
-    private database: Database,
-    private auth: Auth,
+    private db: AngularFireDatabase,
+    private auth: AngularFireAuth,
     private http: HttpClient
   ) {}
 
   async sendReport(reportData: any) {
-    if (!this.auth.currentUser) {
+    const user = await this.auth.currentUser;
+    if (!user) {
       throw new Error('User not authenticated');
     }
 
-    const reportsRef = ref(this.database, `reports/${this.auth.currentUser.uid}`);
-    const newReportRef = push(reportsRef);
-    return from(set(newReportRef, reportData));
+    const reportsRef = this.db.list(`reports/${user.uid}`);
+    return from(reportsRef.push(reportData));
   }
 
   getReports(): Observable<Report[]> {

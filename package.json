@@ -1,9 +1,12 @@
 {
-  "name": "ionic-conference-app",
+  "name": "safe-space",
   "version": "0.0.0",
-  "description": "Ionic Conference App",
-  "author": "Ionic Team <hi@ionicframework.com>",
+  "description": "Safe Space - A platform for mental health support and resources",
+  "author": "Safe Space Team",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.0.0 <21.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
