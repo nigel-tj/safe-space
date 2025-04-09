@@ -1,12 +1,9 @@
-import { NgModule } from '@angular/core';
+import { ChatroomsPage } from './chatrooms.page';
+import { ChatroomsPageRoutingModule } from './chatrooms-routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { ChatroomsPageRoutingModule } from './chatrooms-routing.module';
-
-import { ChatroomsPage } from './chatrooms.page';
+import { NgModule } from '@angular/core';
 
 @NgModule({
   imports: [
@@ -15,6 +12,7 @@ import { ChatroomsPage } from './chatrooms.page';
     IonicModule,
     ChatroomsPageRoutingModule
   ],
-  declarations: [ChatroomsPage]
+  declarations: [ChatroomsPage],
+  providers: []
 })
 export class ChatroomsPageModule {}

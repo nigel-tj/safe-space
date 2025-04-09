@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { UserData } from './user-data';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +9,7 @@ import { UserData } from './user-data';
 export class ConferenceData {
   data: any;
 
-  constructor(public http: HttpClient, public user: UserData) {}
+  constructor(public http: HttpClient) {}
 
   load(): any {
     if (this.data) {
@@ -120,9 +118,8 @@ export class ConferenceData {
     // then this session does not pass the segment test
     let matchesSegment = false;
     if (segment === 'favorites') {
-      if (this.user.hasFavorite(session.name)) {
-        matchesSegment = true;
-      }
+      // We'll handle favorites in the component instead
+      matchesSegment = true;
     } else {
       matchesSegment = true;
     }

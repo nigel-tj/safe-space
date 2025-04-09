@@ -1,7 +1,5 @@
-import { RouterModule, Routes } from '@angular/router';
-
 import { CheckTutorial } from './providers/check-tutorial.service';
-import { NgModule } from '@angular/core';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -63,9 +61,3 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule)
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}

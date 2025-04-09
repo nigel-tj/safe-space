@@ -59,8 +59,6 @@ export class SchedulePage implements OnInit {
   async presentFilter() {
     const modal = await this.modalCtrl.create({
       component: ScheduleFilterPage,
-      canDismiss: true,
-      presentingElement: this.routerOutlet.nativeEl,
       componentProps: { excludedTracks: this.excludeTracks }
     });
     await modal.present();
@@ -80,8 +78,9 @@ export class SchedulePage implements OnInit {
       // Add as a favorite
       this.user.addFavorite(sessionData.name);
 
-      // Close the open item
+      // Close the sliding item and refresh the schedule
       slidingItem.close();
+      this.updateSchedule();
 
       // Create a toast
       const toast = await this.toastCtrl.create({
@@ -92,11 +91,8 @@ export class SchedulePage implements OnInit {
           role: 'cancel'
         }]
       });
-
-      // Present the toast at the bottom of the page
       await toast.present();
     }
-
   }
 
   async removeFavorite(slidingItem: HTMLIonItemSlidingElement, sessionData: any, title: string) {
@@ -117,25 +113,25 @@ export class SchedulePage implements OnInit {
           handler: () => {
             // they want to remove this session from their favorites
             this.user.removeFavorite(sessionData.name);
-            this.updateSchedule();
 
             // close the sliding item and hide the option buttons
             slidingItem.close();
+
+            // update the schedule
+            this.updateSchedule();
           }
         }
       ]
     });
-    // now present the alert on top of all other content
     await alert.present();
   }
 
-  async openSocial(network: string, fab: HTMLIonFabElement) {
-    const loading = await this.loadingCtrl.create({
+  openSocial(network: string, fab: HTMLIonFabElement) {
+    const loading = this.loadingCtrl.create({
       message: `Posting to ${network}`,
       duration: (Math.random() * 1000) + 500
     });
-    await loading.present();
-    await loading.onWillDismiss();
+    loading.then(loading => loading.present());
     fab.close();
   }
 }

@@ -8,10 +8,16 @@ export class UserData {
   favorites: string[] = [];
   HAS_LOGGED_IN = 'hasLoggedIn';
   HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
+  private _storage: Storage | null = null;
 
-  constructor(
-    public storage: Storage
-  ) { }
+  constructor(private storage: Storage) {
+    this.init();
+  }
+
+  async init() {
+    const storage = await this.storage.create();
+    this._storage = storage;
+  }
 
   hasFavorite(sessionName: string): boolean {
     return (this.favorites.indexOf(sessionName) > -1);
@@ -28,47 +34,38 @@ export class UserData {
     }
   }
 
-  login(username: string): Promise<any> {
-    return this.storage.set(this.HAS_LOGGED_IN, true).then(() => {
-      this.setUsername(username);
-      return window.dispatchEvent(new CustomEvent('user:login'));
-    });
+  async login(username: string): Promise<any> {
+    await this._storage?.set(this.HAS_LOGGED_IN, true);
+    await this.setUsername(username);
+    return window.dispatchEvent(new CustomEvent('user:login'));
   }
 
-  signup(username: string): Promise<any> {
-    return this.storage.set(this.HAS_LOGGED_IN, true).then(() => {
-      this.setUsername(username);
-      return window.dispatchEvent(new CustomEvent('user:signup'));
-    });
+  async signup(username: string): Promise<any> {
+    await this._storage?.set(this.HAS_LOGGED_IN, true);
+    await this.setUsername(username);
+    return window.dispatchEvent(new CustomEvent('user:signup'));
   }
 
-  logout(): Promise<any> {
-    return this.storage.remove(this.HAS_LOGGED_IN).then(() => {
-      return this.storage.remove('username');
-    }).then(() => {
-      window.dispatchEvent(new CustomEvent('user:logout'));
-    });
+  async logout(): Promise<any> {
+    await this._storage?.remove(this.HAS_LOGGED_IN);
+    await this._storage?.remove('username');
+    window.dispatchEvent(new CustomEvent('user:logout'));
   }
 
-  setUsername(username: string): Promise<any> {
-    return this.storage.set('username', username);
+  async setUsername(username: string): Promise<any> {
+    return this._storage?.set('username', username);
   }
 
-  getUsername(): Promise<string> {
-    return this.storage.get('username').then((value) => {
-      return value;
-    });
+  async getUsername(): Promise<string | null> {
+    return this._storage?.get('username');
   }
 
-  isLoggedIn(): Promise<boolean> {
-    return this.storage.get(this.HAS_LOGGED_IN).then((value) => {
-      return value === true;
-    });
+  async isLoggedIn(): Promise<boolean> {
+    const value = await this._storage?.get(this.HAS_LOGGED_IN);
+    return value === true;
   }
 
-  checkHasSeenTutorial(): Promise<string> {
-    return this.storage.get(this.HAS_SEEN_TUTORIAL).then((value) => {
-      return value;
-    });
+  async checkHasSeenTutorial(): Promise<string | null> {
+    return this._storage?.get(this.HAS_SEEN_TUTORIAL);
   }
 }

@@ -1,58 +1,106 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ selectedRoom?.name || 'Chat Rooms' }}</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="createRoom()">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>Chat Rooms</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="chat-container" *ngIf="!selectedRoom">
-    <ion-list>
-      <ion-item *ngFor="let room of chatRooms$ | async" button (click)="selectRoom(room)">
-        <ion-label>
-          <h2>{{ room.name }}</h2>
-          <p *ngIf="room.description">{{ room.description }}</p>
-        </ion-label>
-        <ion-note slot="end">
-          {{ room.updatedAt | date:'shortTime' }}
-        </ion-note>
-      </ion-item>
-    </ion-list>
-  </div>
+  <div class="chat-container">
+    <!-- Chat Rooms List -->
+    <div class="rooms-list">
+      <ion-list>
+        <ion-item *ngIf="!(chatRooms$ | async)">
+          <ion-label>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+          </ion-label>
+        </ion-item>
 
-  <div class="chat-container" *ngIf="selectedRoom">
-    <div class="messages">
-      <div *ngFor="let message of messages$ | async"
-           [class.message-right]="isCurrentUser(message)"
-           [class.message-left]="!isCurrentUser(message)"
-           class="message">
-        <div class="message-content">
-          <div class="message-user">{{ message.user.displayName }}</div>
-          <div class="message-text">{{ message.text }}</div>
-          <div class="message-time">{{ message.createdAt | date:'shortTime' }}</div>
+        <ion-item *ngIf="(chatRooms$ | async)?.length === 0">
+          <ion-label color="medium" class="ion-text-center">
+            <ion-icon name="chatbubbles-outline" size="large"></ion-icon>
+            <h2>No chat rooms yet</h2>
+            <p>Create one to get started!</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item button *ngFor="let room of chatRooms$ | async"
+                  (click)="selectRoom(room)"
+                  [class.selected]="selectedRoom?.id === room.id">
+          <ion-avatar slot="start">
+            <ion-icon name="chatbubbles"></ion-icon>
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ room.name }}</h2>
+            <p>{{ room.lastMessage || 'No messages yet' }}</p>
+          </ion-label>
+          <ion-note slot="end" *ngIf="room.updatedAt">
+            {{ room.updatedAt | date:'shortTime' }}
+          </ion-note>
+        </ion-item>
+      </ion-list>
+
+      <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="createRoom()" size="small">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="messages-container">
+      <div *ngIf="!selectedRoom" class="no-room-selected">
+        <ion-icon name="chatbubbles-outline" size="large"></ion-icon>
+        <h2>Select a chat room</h2>
+        <p>Choose a room from the list to start chatting</p>
+      </div>
+
+      <div *ngIf="selectedRoom" class="messages-content">
+        <ion-toolbar>
+          <ion-title>{{ selectedRoom.name }}</ion-title>
+        </ion-toolbar>
+
+        <div class="messages-list">
+          <div *ngIf="!(messages$ | async)" class="loading-messages">
+            <ion-spinner></ion-spinner>
+            <p>Loading messages...</p>
+          </div>
+
+          <div *ngIf="(messages$ | async)?.length === 0" class="no-messages">
+            <ion-icon name="chatbubbles-outline" size="large"></ion-icon>
+            <h2>No messages yet</h2>
+            <p>Be the first to send a message!</p>
+          </div>
+
+          <div *ngFor="let message of messages$ | async"
+               class="message-bubble"
+               [class.my-message]="isCurrentUser(message)">
+            <span class="sender-name" *ngIf="!isCurrentUser(message)">
+              {{ message.user.displayName }}
+            </span>
+            <div class="message-content">{{ message.text }}</div>
+            <div class="message-time">
+              {{ message.createdAt | date:'shortTime' }}
+            </div>
+          </div>
         </div>
+
+        <ion-footer>
+          <ion-toolbar>
+            <ion-item>
+              <ion-input
+                [(ngModel)]="newMessage"
+                placeholder="Type a message..."
+                (keyup.enter)="sendMessage()"
+                [clearInput]="true">
+              </ion-input>
+              <ion-button slot="end" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+                <ion-icon name="send"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-toolbar>
+        </ion-footer>
       </div>
     </div>
   </div>
 </ion-content>
-
-<ion-footer *ngIf="selectedRoom">
-  <ion-toolbar>
-    <ion-item>
-      <ion-input [(ngModel)]="newMessage"
-                 placeholder="Type a message..."
-                 (keyup.enter)="sendMessage()">
-      </ion-input>
-      <ion-button slot="end" (click)="sendMessage()" [disabled]="!newMessage.trim()">
-        <ion-icon slot="icon-only" name="send"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-toolbar>
-</ion-footer>
