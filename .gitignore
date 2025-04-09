@@ -100,7 +100,49 @@ Thumbs.db
 .env.production.local
 .env.local
 
-# Angular cache
-.angular/cache
+# Angular specific
+.angular/
 .angular/cache/
-*/.angular/cache/*
+**/.angular/cache/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Ionic specific
+.ionic/
+www/
+resources/android/
+resources/ios/
+resources/windows/
+plugins/
+platforms/
+
+# Capacitor
+ios/
+android/
+.sourcemaps/
+.versions/
+coverage/
+dist/
+node_modules/
+tmp/
+temp/
+hooks/
+$RECYCLE.BIN/
