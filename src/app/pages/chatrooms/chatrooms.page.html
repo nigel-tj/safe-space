@@ -1,12 +1,58 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Chat Rooms</ion-title>
+    <ion-title>{{ selectedRoom?.name || 'Chat Rooms' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="createRoom()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div class="chat-container" *ngIf="!selectedRoom">
+    <ion-list>
+      <ion-item *ngFor="let room of chatRooms$ | async" button (click)="selectRoom(room)">
+        <ion-label>
+          <h2>{{ room.name }}</h2>
+          <p *ngIf="room.description">{{ room.description }}</p>
+        </ion-label>
+        <ion-note slot="end">
+          {{ room.updatedAt | date:'shortTime' }}
+        </ion-note>
+      </ion-item>
+    </ion-list>
+  </div>
 
+  <div class="chat-container" *ngIf="selectedRoom">
+    <div class="messages">
+      <div *ngFor="let message of messages$ | async"
+           [class.message-right]="isCurrentUser(message)"
+           [class.message-left]="!isCurrentUser(message)"
+           class="message">
+        <div class="message-content">
+          <div class="message-user">{{ message.user.displayName }}</div>
+          <div class="message-text">{{ message.text }}</div>
+          <div class="message-time">{{ message.createdAt | date:'shortTime' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer *ngIf="selectedRoom">
+  <ion-toolbar>
+    <ion-item>
+      <ion-input [(ngModel)]="newMessage"
+                 placeholder="Type a message..."
+                 (keyup.enter)="sendMessage()">
+      </ion-input>
+      <ion-button slot="end" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+        <ion-icon slot="icon-only" name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

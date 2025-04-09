@@ -99,3 +99,8 @@ Thumbs.db
 .env.test.local
 .env.production.local
 .env.local
+
+# Angular cache
+.angular/cache
+.angular/cache/
+*/.angular/cache/*
