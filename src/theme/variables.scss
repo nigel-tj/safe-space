@@ -15,35 +15,35 @@
  * added as well (see below). For more information, please see
  * https://www.ionicframework.com/docs/theming/colors
  *
- * To easily create custom color palettes for your app’s UI,
+ * To easily create custom color palettes for your app's UI,
  * check out our color generator:
  * https://www.ionicframework.com/docs/theming/color-generator
  */
 
  :root {
   /** primary **/
-  --ion-color-primary: #6d64ff;
-  --ion-color-primary-rgb: 109, 100, 255;
+  --ion-color-primary: #0000FF;
+  --ion-color-primary-rgb: 0, 0, 255;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #3171e0;
-  --ion-color-primary-tint: #4c8dff;
+  --ion-color-primary-shade: #0000e0;
+  --ion-color-primary-tint: #1a1aff;
 
   /** secondary **/
-  --ion-color-secondary: #3dc2ff;
-  --ion-color-secondary-rgb: 61, 194, 255;
+  --ion-color-secondary: #000000;
+  --ion-color-secondary-rgb: 0, 0, 0;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
-  --ion-color-secondary-shade: #36abe0;
-  --ion-color-secondary-tint: #50c8ff;
+  --ion-color-secondary-shade: #000000;
+  --ion-color-secondary-tint: #1a1a1a;
 
   /** tertiary **/
-  --ion-color-tertiary: #5260ff;
-  --ion-color-tertiary-rgb: 82, 96, 255;
+  --ion-color-tertiary: #4040ff;
+  --ion-color-tertiary-rgb: 64, 64, 255;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-  --ion-color-tertiary-shade: #4854e0;
-  --ion-color-tertiary-tint: #6370ff;
+  --ion-color-tertiary-shade: #3838e0;
+  --ion-color-tertiary-tint: #5353ff;
 
   /** success **/
   --ion-color-success: #2dd36f;

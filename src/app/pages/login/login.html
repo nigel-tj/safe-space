@@ -33,15 +33,15 @@
         Password needs to be at least 6 characters
       </ion-note>
 
-      <ion-button expand="block" type="submit" [disabled]="!credentials.valid">
+      <ion-button expand="block" type="submit" color="primary" [disabled]="!credentials.valid">
         Sign In
       </ion-button>
 
-      <ion-button expand="block" fill="clear" routerLink="/forgot-password">
+      <ion-button expand="block" fill="clear" color="secondary" routerLink="/forgot-password">
         Forgot Password?
       </ion-button>
 
-      <ion-button expand="block" fill="clear" routerLink="/signup">
+      <ion-button expand="block" fill="clear" color="secondary" routerLink="/signup">
         Don't have an account? Sign up
       </ion-button>
     </form>
