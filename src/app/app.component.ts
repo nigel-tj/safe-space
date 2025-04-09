@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { MenuController, Platform, ToastController } from '@ionic/angular';
-import { Router, RouterModule } from '@angular/router';
 
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { SwUpdate } from '@angular/service-worker';
 import { UserData } from './providers/user-data';
@@ -14,17 +11,7 @@ import { environment } from '../environments/environment';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  standalone: true,
-  imports: [
-    IonicModule,
-    RouterModule,
-    FormsModule,
-    CommonModule
-  ],
-  providers: [
-    UserData
-  ]
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
   private menu = inject(MenuController);
@@ -32,7 +19,7 @@ export class AppComponent implements OnInit {
   private router = inject(Router);
   private storage = inject(Storage);
   private userData = inject(UserData);
-  private swUpdate = inject(SwUpdate);
+  private swUpdate = inject(SwUpdate, { optional: true });
   private toastCtrl = inject(ToastController);
 
   appPages = [
@@ -58,7 +45,7 @@ export class AppComponent implements OnInit {
     },
     {
       title: 'Help Centers',
-      url: '/app/tabs/map',
+      url: '/app/tabs/help-centers',
       icon: 'map'
     },
     {
@@ -85,7 +72,7 @@ export class AppComponent implements OnInit {
   }
 
   private async setupServiceWorker() {
-    if (this.swUpdate.isEnabled) {
+    if (this.swUpdate?.isEnabled) {
       this.swUpdate.versionUpdates.subscribe(event => {
         if (event.type === 'VERSION_READY') {
           this.promptUserUpdate();
@@ -145,7 +132,7 @@ export class AppComponent implements OnInit {
 
   async logout() {
     await this.userData.logout();
-    await this.router.navigateByUrl('/app/tabs/schedule');
+    await this.router.navigateByUrl('/app/tabs/news-feed');
   }
 
   async openTutorial() {

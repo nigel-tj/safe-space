@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { UserData } from '../../providers/user-data';
-
 import { UserOptions } from '../../interfaces/user-options';
-
-
 
 @Component({
   selector: 'page-signup',
@@ -27,7 +23,7 @@ export class SignupPage {
 
     if (form.valid) {
       this.userData.signup(this.signup.username);
-      this.router.navigateByUrl('/app/tabs/schedule');
+      this.router.navigateByUrl('/app/tabs/news-feed');
     }
   }
 }

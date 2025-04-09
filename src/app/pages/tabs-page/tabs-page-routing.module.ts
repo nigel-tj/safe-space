@@ -14,10 +14,6 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () => import('../news-feed/news-feed.module').then(m => m.NewsFeedPageModule)
-          },
-          {
-            path: 'social-workers/:social-worker-id',
-            loadChildren: () => import('../social-worker-detail/social-worker-detail.module').then(m => m.SocialWorkerDetailPageModule)
           }
         ]
       },
@@ -27,10 +23,6 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () => import('../speaker-list/speaker-list.module').then(m => m.SpeakerListModule)
-          },
-          {
-            path: 'social-worker-detail/:social-worker-id',
-            loadChildren: () => import('../social-worker-detail/social-worker-detail.module').then(m => m.SocialWorkerDetailPageModule)
           }
         ]
       },
@@ -72,14 +64,14 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/app/tabs/news-feed',
+        redirectTo: '/tabs/news-feed',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/app/tabs/news-feed',
+    redirectTo: '/tabs/news-feed',
     pathMatch: 'full'
   }
 ];

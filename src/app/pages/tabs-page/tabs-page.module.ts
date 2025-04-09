@@ -1,6 +1,7 @@
 import { AboutModule } from '../about/about.module';
 import { ChatroomsPageModule } from "../chatrooms/chatrooms.module";
 import { CommonModule } from '@angular/common';
+import { HelpCentersPageModule } from '../help-centers/help-centers.module';
 import { IonicModule } from '@ionic/angular';
 import { MapModule } from '../map/map.module';
 import { NgModule } from '@angular/core';
@@ -22,7 +23,8 @@ import { TabsPageRoutingModule } from './tabs-page-routing.module';
     SpeakerDetailModule,
     SpeakerListModule,
     TabsPageRoutingModule,
-    ChatroomsPageModule
+    ChatroomsPageModule,
+    HelpCentersPageModule
   ],
   declarations: [
     TabsPage,

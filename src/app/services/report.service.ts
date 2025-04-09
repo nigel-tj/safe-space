@@ -1,14 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
-import {
-  Database,
-  ref,
-  push,
-  set
-} from 'firebase/database';
-import { Auth } from 'firebase/auth';
-import { from } from 'rxjs';
+import { Database, child, get, push, ref, set } from '@angular/fire/database';
+import { Observable, from } from 'rxjs';
+
+import { Auth } from '@angular/fire/auth';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Report } from '../models/report';
 
 @Injectable({
@@ -18,8 +13,8 @@ export class ReportService {
   private apiUrl = 'http://localhost:3000/api/reports';
 
   constructor(
-    @Inject('database') private database: Database,
-    @Inject('auth') private auth: Auth,
+    private database: Database,
+    private auth: Auth,
     private http: HttpClient
   ) {}
 
