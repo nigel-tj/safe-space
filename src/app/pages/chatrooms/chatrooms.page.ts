@@ -1,4 +1,4 @@
-import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
 import { ChatMessage, ChatRoom, ChatService } from '../../services/chat.service';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { IonContent, ToastController } from '@ionic/angular';
@@ -18,6 +18,7 @@ export class ChatroomsPage implements OnInit {
   messages$: Observable<ChatMessage[]>;
   newMessage = '';
   selectedRoom: ChatRoom | null = null;
+  currentUser: User | null = null;
 
   private chatService = inject(ChatService);
   private auth = inject(Auth);
@@ -31,6 +32,7 @@ export class ChatroomsPage implements OnInit {
   ngOnInit() {
     // Set up auth state listener
     onAuthStateChanged(this.auth, (user) => {
+      this.currentUser = user;
       if (user) {
         // User is signed in, load chat rooms
         this.loadChatRooms();
@@ -57,7 +59,7 @@ export class ChatroomsPage implements OnInit {
   }
 
   selectRoom(room: ChatRoom) {
-    if (!this.auth.currentUser) {
+    if (!this.currentUser) {
       this.router.navigate(['/login']);
       return;
     }
@@ -79,7 +81,7 @@ export class ChatroomsPage implements OnInit {
   }
 
   async sendMessage() {
-    if (!this.auth.currentUser) {
+    if (!this.currentUser) {
       this.router.navigate(['/login']);
       return;
     }
@@ -102,7 +104,7 @@ export class ChatroomsPage implements OnInit {
   }
 
   async createRoom() {
-    if (!this.auth.currentUser) {
+    if (!this.currentUser) {
       this.router.navigate(['/login']);
       return;
     }
@@ -136,6 +138,6 @@ export class ChatroomsPage implements OnInit {
   }
 
   isCurrentUser(message: ChatMessage): boolean {
-    return message.user.uid === this.auth.currentUser?.uid;
+    return message.user.uid === this.currentUser?.uid;
   }
 }

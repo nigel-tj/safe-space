@@ -1,8 +1,9 @@
-import { Auth, authState } from '@angular/fire/auth';
-import { Firestore, addDoc, collection, collectionData, limit, orderBy, query } from '@angular/fire/firestore';
-import { Injectable, inject } from '@angular/core';
+import { Auth, User, onAuthStateChanged } from '@angular/fire/auth';
+import { Firestore, addDoc, collection, collectionData, doc, docData, orderBy, query, updateDoc } from '@angular/fire/firestore';
 import { Observable, from, throwError } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+
+import { Injectable } from '@angular/core';
 
 export interface ChatMessage {
   id?: string;
@@ -20,6 +21,7 @@ export interface ChatRoom {
   description?: string;
   lastMessage?: string;
   updatedAt: number;
+  createdAt?: number;
   moderators?: Record<string, boolean>;
 }
 
@@ -27,89 +29,85 @@ export interface ChatRoom {
   providedIn: 'root'
 })
 export class ChatService {
-  private firestore = inject(Firestore);
-  private auth = inject(Auth);
+  constructor(
+    private firestore: Firestore,
+    private auth: Auth
+  ) {}
 
   // Get all chat rooms
   getChatRooms(): Observable<ChatRoom[]> {
-    return authState(this.auth).pipe(
-      switchMap(user => {
+    return new Observable(subscriber => {
+      onAuthStateChanged(this.auth, user => {
         if (!user) {
-          return throwError(() => new Error('Must be logged in to access chat rooms'));
+          subscriber.error(new Error('Must be logged in to access chat rooms'));
+          return;
         }
-        const roomsRef = collection(this.firestore, 'chatRooms');
-        const q = query(roomsRef, orderBy('updatedAt', 'desc'));
-        return collectionData(q, { idField: 'id' }) as Observable<ChatRoom[]>;
-      })
-    );
+
+        const chatRoomsRef = collection(this.firestore, 'chatRooms');
+        const q = query(chatRoomsRef, orderBy('updatedAt', 'desc'));
+        collectionData(q, { idField: 'id' }).subscribe({
+          next: (rooms) => subscriber.next(rooms as ChatRoom[]),
+          error: (error) => subscriber.error(error)
+        });
+      });
+    });
   }
 
   // Get messages for a specific room
   getRoomMessages(roomId: string): Observable<ChatMessage[]> {
-    return authState(this.auth).pipe(
-      switchMap(user => {
+    return new Observable(subscriber => {
+      onAuthStateChanged(this.auth, user => {
         if (!user) {
-          return throwError(() => new Error('Must be logged in to access messages'));
+          subscriber.error(new Error('Must be logged in to access messages'));
+          return;
         }
+
         const messagesRef = collection(this.firestore, `chatRooms/${roomId}/messages`);
-        const q = query(messagesRef, orderBy('createdAt', 'desc'), limit(50));
-        return collectionData(q, { idField: 'id' }).pipe(
-          map(messages => messages.reverse())
-        ) as Observable<ChatMessage[]>;
-      })
-    );
+        const q = query(messagesRef, orderBy('createdAt', 'asc'));
+        collectionData(q, { idField: 'id' }).subscribe({
+          next: (messages) => subscriber.next(messages as ChatMessage[]),
+          error: (error) => subscriber.error(error)
+        });
+      });
+    });
   }
 
-  // Send a message
+  // Send a message to a room
   async sendMessage(roomId: string, text: string): Promise<void> {
-    const user = this.auth.currentUser;
-    if (!user) {
-      throw new Error('Must be logged in to send messages');
-    }
+    const user = await this.auth.currentUser;
+    if (!user) throw new Error('Must be logged in to send messages');
 
     const messagesRef = collection(this.firestore, `chatRooms/${roomId}/messages`);
-    const messageData = {
+    await addDoc(messagesRef, {
       text,
       createdAt: Date.now(),
       user: {
         uid: user.uid,
         displayName: user.displayName || 'Anonymous'
       }
-    };
+    });
 
-    // Add message and update room's lastMessage
-    await Promise.all([
-      addDoc(messagesRef, messageData),
-      this.updateRoomLastMessage(roomId, text)
-    ]);
+    // Update room's last message and timestamp
+    const roomRef = doc(this.firestore, `chatRooms/${roomId}`);
+    await updateDoc(roomRef, {
+      lastMessage: text,
+      updatedAt: Date.now()
+    });
   }
 
   // Create a new chat room
-  async createRoom(name: string, description?: string): Promise<void> {
-    const user = this.auth.currentUser;
-    if (!user) {
-      throw new Error('Must be logged in to create rooms');
-    }
+  async createRoom(name: string): Promise<void> {
+    const user = await this.auth.currentUser;
+    if (!user) throw new Error('Must be logged in to create rooms');
 
     const roomsRef = collection(this.firestore, 'chatRooms');
     await addDoc(roomsRef, {
       name,
-      description,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      lastMessage: '',
       moderators: {
-        [user.uid]: true // Make the creator a moderator
+        [user.uid]: true
       }
-    });
-  }
-
-  // Update room's last message and timestamp
-  private async updateRoomLastMessage(roomId: string, lastMessage: string): Promise<void> {
-    const roomRef = collection(this.firestore, 'chatRooms');
-    await addDoc(roomRef, {
-      lastMessage,
-      updatedAt: Date.now()
     });
   }
 }

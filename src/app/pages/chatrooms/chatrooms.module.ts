@@ -1,3 +1,4 @@
+import { ChatService } from '../../services/chat.service';
 import { ChatroomsPage } from './chatrooms.page';
 import { ChatroomsPageRoutingModule } from './chatrooms-routing.module';
 import { CommonModule } from '@angular/common';
@@ -13,6 +14,6 @@ import { NgModule } from '@angular/core';
     ChatroomsPageRoutingModule
   ],
   declarations: [ChatroomsPage],
-  providers: []
+  providers: [ChatService]
 })
-export class ChatroomsPageModule {}
+export class ChatroomsPageModule { }

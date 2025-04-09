@@ -1,15 +1,10 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { AngularFireModule } from '@angular/fire/compat';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
-import { Drivers } from '@ionic/storage';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
-import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { NgModule } from '@angular/core';
 import { RouteReuseStrategy } from '@angular/router';
@@ -22,24 +17,18 @@ import { environment } from '../environments/environment';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
-    AngularFireDatabaseModule,
+    HttpClientModule,
     FormsModule,
-    CommonModule,
-    IonicStorageModule.forRoot({
-      name: '__safespace',
-      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
-    }),
+    ReactiveFormsModule,
+    IonicStorageModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
