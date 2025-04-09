@@ -4,8 +4,6 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
-// Register Swiper custom elements
-import { register } from 'swiper/element';
 
 @Component({
   selector: 'page-welcome',
@@ -22,10 +20,7 @@ export class WelcomePage implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     private storage: Storage
-  ) {
-    // Register Swiper web components
-    register();
-  }
+  ) {}
 
   async ngOnInit() {
     await this.storage.create();
@@ -37,13 +32,17 @@ export class WelcomePage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // Set Swiper parameters
     if (this.slides && this.slides.nativeElement) {
       const swiperEl = this.slides.nativeElement;
       Object.assign(swiperEl, {
+        slidesPerView: 1,
         pagination: true,
-        effect: 'fade',
-        autoHeight: true
+        effect: 'slide',
+        autoHeight: false,
+        allowTouchMove: true,
+        speed: 400,
+        initialSlide: 0,
+        cssMode: true
       });
       swiperEl.initialize();
     }

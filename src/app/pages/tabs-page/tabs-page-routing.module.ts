@@ -58,7 +58,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'map',
+        path: 'help-centers',
         children: [
           {
             path: '',

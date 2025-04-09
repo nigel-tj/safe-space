@@ -1,35 +1,101 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
-www/
 
+# Ionic/Angular specific
 *~
 *.sw[mnpcod]
-*.log
+.tmp
 *.tmp
 *.tmp.*
-log.txt
-*.sublime-project
-*.sublime-workspace
-.vscode/
-npm-debug.log*
-.firebase/
-.idea/
-.sourcemaps/
-.sass-cache/
-.tmp/
-.versions/
-coverage/
-dist/
-node_modules/
-tmp/
-temp/
-hooks/
-platforms/
-plugins/
-plugins/android.json
-plugins/ios.json
+UserInterfaceState.xcuserstate
 $RECYCLE.BIN/
 
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-project
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Visual Studio Code
+.history/*
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+.angular/
+www/
+platforms/
+plugins/
+/android
+/ios
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+*.log
+.angular
+
+# System files
 .DS_Store
 Thumbs.db
-UserInterfaceState.xcuserstate
+
+# Firebase
+.firebase/
+*-debug.log
+.runtimeconfig.json
+
+# Environment files
+/src/environments/*.js
+/src/environments/*.js.map
+
+# Capacitor
+/ios/
+/android/
+/electron/
+
+# Testing
+/coverage
+/.nyc_output
+
+# Production build
+/www
+/build
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local

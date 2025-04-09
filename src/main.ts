@@ -1,16 +1,19 @@
-import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
-import { enableProdMode } from '@angular/core';
-import { environment } from './environments/environment';
-
+import { bootstrapApplication } from '@angular/platform-browser';
 // Import Ionic web components
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { defineCustomElements as defineIonicCore } from '@ionic/core/loader';
+import { enableProdMode } from '@angular/core';
+import { environment } from './environments/environment';
+import { register } from 'swiper/element/bundle';
 
 if (environment.production) {
   enableProdMode();
 }
+
+// Register Swiper custom elements
+register();
 
 // Bootstrap Angular
 bootstrapApplication(AppComponent, appConfig)
